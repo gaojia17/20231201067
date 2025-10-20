@@ -1,0 +1,40 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+    <head> 
+        <title>Single Page</title> 
+        <style> 
+            div { 
+                display: none; 
+            }
+            button {
+                margin: 10px;
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+            .active {
+                background-color: #007bff;
+                color: white;
+            }
+            h1 {
+                color: #333;
+                text-align: center;
+            }
+        </style> 
+        <script src="singlepage.js"></script> 
+    </head> 
+    <body> 
+        <button data-page="page1" class="active">Page 1</button> 
+        <button data-page="page2">Page 2</button> 
+        <button data-page="page3">Page 3</button> 
+        <div id="page1" style="display: block;"> 
+            <h1>This is page 1</h1> 
+        </div> 
+        <div id="page2"> 
+            <h1>This is page 2</h1> 
+        </div> 
+        <div id="page3"> 
+            <h1>This is page 3</h1> 
+        </div> 
+    </body> 
+</html>

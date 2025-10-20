@@ -1,35 +1,20 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import Http404, HttpResponse 
+from django.shortcuts import render 
 
-# Create your views here.
+# Create your views here. 
+def index(request): 
+    return render(request, "singlepage/index.html") 
 
-def hello_world(request):
-    """简单的helloworld视图函数"""
-    return HttpResponse("<h1>Hello, World! </h1><p>这是高佳欢(学号:20231201067)</p>")
+# The texts are much longer in reality, but have 
+# been shortened here to save space 
+texts = [
+    "Biology studies living organisms, from tiny bacteria to large whales. It explores life processes like growth, reproduction, and how organisms interact with their environments. Key areas include cell biology, genetics, and ecology, helping us understand life’s origins and sustain Earth’s biodiversity",
+    "History records and analyzes past human events, from ancient civilizations (e.g., Egypt, China) to modern wars. It examines societies, cultures, and leaders, revealing patterns that shape today’s world. Studying history teaches critical thinking and helps avoid repeating past mistakes.",
+    "Physics explores matter, energy, and their interactions—from atoms to the universe. It explains gravity, electricity, and light, with laws like Newton’s motion rules. Its discoveries drive tech: from smartphones (using electromagnetism) to space travel, making it fundamental to understanding the physical world."
+] 
 
-
-
-def index(request):
-    """首页视图"""
-    return HttpResponse("""
-    <html>
-    <head>
-        <title>Django Helloworld 测试</title>
-        <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            h1 { color: #333; }
-            a { color: #007bff; text-decoration: none; margin: 10px; display: inline-block; }
-            a:hover { text-decoration: underline; }
-        </style>
-    </head>
-    <body>
-        <h1>Django Helloworld 视图测试</h1>
-        <p>这是高佳欢(学号:20231201067)创建的Django视图测试应用。</p>
-        <div>
-            <a href="/hello/">Hello World</a>
-            <a href="/hello/高佳欢/">Hello 高佳欢</a>
-            <a href="/hello/Django/">Hello Django</a>
-        </div>
-    </body>
-    </html>
-    """)
+def section(request, num): 
+    if 1 <= num <= 3: 
+        return HttpResponse(texts[num - 1]) 
+    else: 
+        raise Http404("No such section")
