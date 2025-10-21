@@ -6,7 +6,7 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 from django.urls import path
 from . import views
 
-urlpatterns = [
-    path('', views.index, name='index'),
-    path('sections/<int:num>', views.section, name='section')
-]
+urlpatterns = [ 
+     path("", views.index, name="index"), 
+     path("posts", views.posts, name="posts") 
+ ]
