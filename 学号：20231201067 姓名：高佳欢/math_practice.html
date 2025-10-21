@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学练习应用</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        #app { 
+            text-align: center; 
+            font-family: sans-serif; 
+        } 
+        
+        #problem { 
+            font-size: 72px; 
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .math-app {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .problem {
+            font-size: 72px;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .score {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+            margin: 20px 0;
+        }
+        .feedback {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .new-problem {
+            background: #28a745;
+        }
+        .new-problem:hover {
+            background: #218838;
+        }
+        
+        #winner { 
+            font-size: 72px; 
+            color: green; 
+            font-weight: bold;
+            text-align: center;
+            margin: 100px 0;
+            padding: 40px;
+            background: #d4edda;
+            border: 3px solid #28a745;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function MathPractice() {
+            const [state, setState] = React.useState({ 
+                num1: 1, 
+                num2: 1, 
+                response: "", 
+                score: 0,
+                feedback: "",
+                isCorrect: null
+            });
+
+            const generateNewProblem = () => {
+                const num1 = Math.floor(Math.random() * 10) + 1;
+                const num2 = Math.floor(Math.random() * 10) + 1;
+                setState({
+                    ...state,
+                    num1,
+                    num2,
+                    response: "",
+                    feedback: "",
+                    isCorrect: null
+                });
+            };
+
+            const checkAnswer = () => {
+                const correctAnswer = state.num1 + state.num2;
+                const userAnswer = parseInt(state.response);
+                
+                if (userAnswer === correctAnswer) {
+                    setState({
+                        ...state,
+                        score: state.score + 1,
+                        feedback: "正确！✓",
+                        isCorrect: true
+                    });
+                } else {
+                    setState({
+                        ...state,
+                        feedback: `错误！正确答案是 ${correctAnswer}`,
+                        isCorrect: false
+                    });
+                }
+            };
+
+            function updateResponse(event) { 
+                setState({ 
+                    ...state, 
+                    response: event.target.value 
+                }); 
+            }
+
+            function inputKeyPress(event) { 
+                if (event.key === "Enter") { 
+                    const answer = parseInt(state.response); 
+                    if (answer === state.num1 + state.num2) { 
+                        // User got question right 
+                        setState({ 
+                            ...state, 
+                            score: state.score + 1, 
+                            response: "", 
+                            num1: Math.ceil(Math.random() * 10), 
+                            num2: Math.ceil(Math.random() * 10) 
+                        }); 
+                    } else { 
+                        // User got question wrong 
+                        setState({ 
+                            ...state, 
+                            score: state.score - 1, 
+                            response: "" 
+                        }) 
+                    } 
+                } 
+            }
+
+            React.useEffect(() => {
+                generateNewProblem();
+            }, []);
+
+            if (state.score === 10) { 
+                return ( 
+                    <div id="winner">You won!</div> 
+                ); 
+            }
+
+            return (
+                <div className="math-app">
+                    <h1>数学加法练习</h1>
+                    <div className="problem">
+                        {state.num1} + {state.num2} = ?
+                    </div>
+                    
+                    <div className="input-group">
+                        <input 
+                            type="number"
+                            value={state.response}
+                            onChange={updateResponse}
+                            onKeyPress={inputKeyPress}
+                            placeholder="输入答案"
+                            autoFocus
+                        />
+                        <button onClick={checkAnswer}>检查答案</button>
+                    </div>
+                    
+                    {state.feedback && (
+                        <div className={`feedback ${state.isCorrect ? 'correct' : 'incorrect'}`}>
+                            {state.feedback}
+                        </div>
+                    )}
+                    
+                    <div className="score">
+                        得分: {state.score}
+                    </div>
+                    
+                    <button className="new-problem" onClick={generateNewProblem}>
+                        新题目
+                    </button>
+                </div>
+            );
+        }
+
+        ReactDOM.render(React.createElement(MathPractice), document.getElementById('root'));
+    </script>
+</body>
+</html>
